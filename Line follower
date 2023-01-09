@@ -1,0 +1,48 @@
+#include <AFMotor.h>
+
+const int SensorKiri = A2; //Sensor kiri
+const int SensorKanan = A3; //Sensor kanan
+
+char val;
+AF_DCMotor RodaKiri(4, MOTOR12_64KHZ); //Roda kiri
+AF_DCMotor RodaKanan(3, MOTOR12_64KHZ); //Roda kanan
+
+
+void setup() {
+pinMode (SensorKiri, INPUT);
+pinMode (SensorKanan, INPUT);
+Serial.begin (9600);
+
+RodaKiri.setSpeed(130); //Set kecepatan Roda (range 0-255)
+RodaKanan.setSpeed(130);
+}
+void loop() {
+  // put your main code here, to run repeatedly:
+int DataKiri = digitalRead (SensorKiri);
+int DataKanan = digitalRead (SensorKanan);
+Serial.print ("Sensor : ");
+Serial.println (DataKiri);
+Serial.print ("Sensor : ");
+Serial.println (DataKanan);
+
+if (DataKiri == 0 && DataKanan == 0) {
+  //MAJU
+RodaKiri.run(FORWARD); //Roda kiri maju
+RodaKanan.run(FORWARD); //Roda kanan maju
+ }
+else if(DataKiri == 1 && DataKanan == 0) {
+  //BELOK KIRI
+RodaKiri.run(BACKWARD); //Roda kiri mundur
+RodaKanan.run(FORWARD); //Roda kanan maju
+}
+ else if(DataKiri == 0 && DataKanan == 1){
+   //BELOK KANAN
+  RodaKiri.run(FORWARD); //Roda kiri maju
+  RodaKanan.run(BACKWARD); //Roda kanan mundur
+}
+else {
+  //BERHENTI
+  RodaKiri.run(RELEASE); 
+  RodaKanan.run(RELEASE); 
+}
+}
